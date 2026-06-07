@@ -6,12 +6,9 @@ namespace MyGym.Context
 {
     public class GymDbContext : DbContext
     {
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            //should be in appseting.json
-            optionsBuilder.UseSqlServer("Server=AHMED_MOHAMED;Database=MyGym;Trusted_Connection=True;TrustServerCertificate=true");
-
-        }
+        // do need onconfiguring if we are using dependency injection to pass options
+        public GymDbContext(DbContextOptions<GymDbContext> options): base(options) { }
+        //base have access to reach appsettings.json to get connection string
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.ApplyConfiguration<Plan>(new PlanConfiguration());

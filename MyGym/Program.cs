@@ -1,3 +1,8 @@
+using GymManagement.DAL.Repositories.Classes;
+using GymManagement.DAL.Repositories.Interfaces;
+using MyGym.Context;
+using Microsoft.EntityFrameworkCore;
+
 namespace MyGym
 {
     public class Program
@@ -5,10 +10,14 @@ namespace MyGym
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
-
+            //Register DbContext
+            builder.Services.AddDbContext<GymDbContext>(options =>
+            {
+                options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
+            });//DI Will search in Appseting with access options
             // Add services to the container.
             builder.Services.AddControllersWithViews();
-
+            builder.Services.AddScoped<IPlanRepository, PlanRepositry>();//DI
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.

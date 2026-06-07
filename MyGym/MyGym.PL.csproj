@@ -14,4 +14,8 @@
     </PackageReference>
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\GymManagement.BLL\GymManagement.BLL.csproj" />
+  </ItemGroup>
+
 </Project>
