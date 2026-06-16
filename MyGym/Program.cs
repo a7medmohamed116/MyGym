@@ -2,6 +2,8 @@ using GymManagement.DAL.Repositories.Classes;
 using GymManagement.DAL.Repositories.Interfaces;
 using MyGym.Context;
 using Microsoft.EntityFrameworkCore;
+using GymManagement.BLL.Services.Interfaces;
+using GymManagement.BLL.Services.Classes;
 
 namespace MyGym
 {
@@ -17,7 +19,10 @@ namespace MyGym
             });//DI Will search in Appseting with access options
             // Add services to the container.
             builder.Services.AddControllersWithViews();
-            builder.Services.AddScoped<IPlanRepository, PlanRepositry>();//DI
+            
+            builder.Services.AddScoped(typeof(IGenericRepository<> ), typeof(GenericRepository<>));//different way to register generic 
+            builder.Services.AddScoped<IMemberService , MemberService>();
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.

@@ -13,5 +13,13 @@ namespace GymManagement.DAL.Models
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
 
+        public Trainer Trainer { get; set; } = default!;
+        public int TrainerId { get; set; }
+
+        public Category Category { get; set; } = default!;
+        public int CategoryId { get; set; }
+
+        public ICollection<Booking> SessionMember { get; set; }
+
     }
 }

@@ -10,5 +10,7 @@ namespace MyGym.Models
         public int DurationDays { get; set; }
         public bool IsActive { get; set; } // soft delete
 
+        public ICollection<Membership> Memberships { get; set; }
+
     }
 }

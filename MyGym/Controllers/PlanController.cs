@@ -3,6 +3,7 @@ using GymManagement.DAL.Repositories.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MyGym.Context;
+using MyGym.Models;
 using System.Numerics;
 
 namespace MyGym.Controllers
@@ -21,8 +22,8 @@ namespace MyGym.Controllers
         // still have problem with DI
         
         
-        private readonly IPlanRepository _PlanRepository;
-        public PlanController(IPlanRepository planRepository)
+        private readonly IGenericRepository<Plan> _PlanRepository; // will remove IPlanRepository and add IGenericRepository
+        public PlanController(IGenericRepository<Plan> planRepository)
         {
             _PlanRepository = planRepository;
         }//this will kill new , no direct deal with connection ,just tell the relaton in program.cs and asp.net handel DI

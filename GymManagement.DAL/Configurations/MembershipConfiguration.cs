@@ -1,0 +1,21 @@
+﻿using GymManagement.DAL.Models;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace GymManagement.DAL.Configurations
+{
+    public class MembershipConfiguration : IEntityTypeConfiguration<Membership>
+    {
+        public void Configure(EntityTypeBuilder<Membership> builder)
+        {
+            builder.Property(p => p.CreatedAt).HasColumnName("StartDate")
+                                             .HasDefaultValueSql("GETDATE()");
+            builder.HasKey(b => b.Id); 
+        }
+    }
+}

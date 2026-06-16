@@ -12,5 +12,10 @@ namespace GymManagement.DAL.Models
 
         //joindate == createdat of baseentity
 
+        public HealthRecord HealthRecord { get; set; } = default!;
+
+        public ICollection<Membership> Memberships { get; set; }
+
+        public ICollection<Booking> MemberSession { get; set; }
     }
 }
