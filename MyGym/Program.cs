@@ -22,7 +22,7 @@ namespace MyGym
             
             builder.Services.AddScoped(typeof(IGenericRepository<> ), typeof(GenericRepository<>));//different way to register generic 
             builder.Services.AddScoped<IMemberService , MemberService>();
-
+            builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.

@@ -14,7 +14,12 @@ namespace GymManagement.BLL.Services.ViewModels.MemberViewModels
         public string Email { get; set; }
         public string Phone { get; set; }
         public string Gender { get; set; }
-
+        // put the member details here to show in details page , to save not make another view  model with almost prop here
+        public string? Address{ get; set; }
+        public string? DateOfBirth { get; set; }
+        public string? PlanName { get; set; }
+        public string? MemberShipStartDate{ get; set; }
+        public string? MemberShipEndDate { get; set; }
 
 
 

@@ -1,5 +1,4 @@
-﻿using GymManagement.DAL.Models.Enums;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -8,35 +7,22 @@ using System.Threading.Tasks;
 
 namespace GymManagement.BLL.Services.ViewModels.MemberViewModels
 {
-    // usage of view model is to make sure that the data we receive from the user is valid and to make sure that we don't expose any sensitive data to the user and retreve only neeeded data 
-
-    public class CreateMemberViewModel
+    public class MemberToUpdateViewModel
     {
-        [Required(ErrorMessage = "Name Is Required")]
-        [RegularExpression(@"^[a-zA-Z\s]+$", ErrorMessage = "Name can only contain letters and spaces")]
-        public string Name { get; set; } = default!;
+        public string? Name { get; set; }
+        public string? Photo { get; set; }
 
         [Required(ErrorMessage = "Email Is Required")]
         [EmailAddress(ErrorMessage = "Invalid email format")]
-        [DataType(DataType.EmailAddress)]
-
         public string Email { get; set; } = default!;
 
         [Required(ErrorMessage = "Phone Number Is Required")]
         [Phone(ErrorMessage = "Invalid phone number")]
         [RegularExpression(@"^(010|011|012|015)\d{8}$", ErrorMessage = "Phone number must be a valid Egyptian mobile number")]
-        [DataType(DataType.PhoneNumber)]
         public string Phone { get; set; } = default!;
 
-        [Required(ErrorMessage = "Date of Birth is required")]
-        [DataType(DataType.Date)]
-        public DateOnly DateOfBirth { get; set; }
-
-        [Required(ErrorMessage = "Gender is required")]
-        public Gender Gender { get; set; }
-
         [Required(ErrorMessage = "Building Number Is Required")]
-        [Range(1, 9000, ErrorMessage = "Building Number must be greater than 0")]
+        [Range(1, int.MaxValue, ErrorMessage = "Building Number must be greater than 0")]
         public int BuildingNumber { get; set; }
 
         [Required(ErrorMessage = "City Is Required")]
@@ -48,9 +34,6 @@ namespace GymManagement.BLL.Services.ViewModels.MemberViewModels
         [StringLength(150, MinimumLength = 2, ErrorMessage = "Street must be between 2 and 150 characters")]
         [RegularExpression(@"^[a-zA-Z0-9\s]+$", ErrorMessage = "Street can only contain letters, numbers, and spaces")]
         public string Street { get; set; } = default!;
-
-        [Required(ErrorMessage = "Health record is required")]
-        public HealthRecordViewModel HealthRecordViewModel { get; set; } = default!;
 
     }
 }

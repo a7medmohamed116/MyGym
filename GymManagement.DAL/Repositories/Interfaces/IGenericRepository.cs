@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -15,10 +16,17 @@ namespace GymManagement.DAL.Repositories.Interfaces
         Task<TEntity?> GetByIdAsync(int id, CancellationToken ct = default);
         // add update delete will return int cause # of row effected
 
-        Task<int> AddAsync(TEntity entity, CancellationToken ct = default);
-        Task<int> UpdateAsync(TEntity entity, CancellationToken ct = default);
-        Task<int> DeleteAsync(TEntity entity, CancellationToken ct = default);
+        void AddAsync(TEntity entity, CancellationToken ct = default);
+        void UpdateAsync(TEntity entity, CancellationToken ct = default);
+        void DeleteAsync(TEntity entity, CancellationToken ct = default);
+        // will refactor from "Task<int>" to void cause we will use unit of work pattern to save changes in one place and not in every repository 
         Task<IEnumerable<TEntity>> GetAllAsync(bool tracking =false ,CancellationToken ct =default);
 
+        //check method can check with it in every place
+        Task<bool>AnyAsync(Expression<Func<TEntity, bool>> expression, CancellationToken ct = default);
+        //x => x.Email
+
+        //check user has active membership not 
+        Task<TEntity> FirstOrDefaultAsync(Expression<Func<TEntity, bool>> expression, bool tracking = false, CancellationToken ct = default);
     }
 }
