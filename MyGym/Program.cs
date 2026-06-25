@@ -4,6 +4,8 @@ using MyGym.Context;
 using Microsoft.EntityFrameworkCore;
 using GymManagement.BLL.Services.Interfaces;
 using GymManagement.BLL.Services.Classes;
+using AutoMapper;
+using GymManagement.BLL.Profiels;
 
 namespace MyGym
 {
@@ -19,10 +21,16 @@ namespace MyGym
             });//DI Will search in Appseting with access options
             // Add services to the container.
             builder.Services.AddControllersWithViews();
-            
+            //Register DI
             builder.Services.AddScoped(typeof(IGenericRepository<> ), typeof(GenericRepository<>));//different way to register generic 
             builder.Services.AddScoped<IMemberService , MemberService>();
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+            builder.Services.AddScoped<ISessionRepository,SessionRepository>();
+            builder.Services.AddScoped<ISessionService,SessionService>();
+            builder.Services.AddScoped<IPlanService, PlanService>();
+            // Add auto mapper
+            builder.Services.AddAutoMapper(X=>X.AddProfile(new MappingProfile()));
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.

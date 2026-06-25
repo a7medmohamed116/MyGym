@@ -14,5 +14,9 @@ namespace GymManagement.DAL.Repositories.Interfaces
         // save changes
         Task<int> SaveChangesAsync(CancellationToken ct =default); //[Completed]
 
+        //SessionRepo
+        public ISessionRepository SessionRepository { get; } // add prop and implement it in unitofwork and give the value from injected value in ctor
+
+
     }
 }

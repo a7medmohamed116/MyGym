@@ -1,4 +1,5 @@
-﻿using GymManagement.BLL.Services.Interfaces;
+﻿using AutoMapper;
+using GymManagement.BLL.Services.Interfaces;
 using GymManagement.BLL.Services.ViewModels.MemberViewModels;
 using GymManagement.DAL.Models;
 using GymManagement.DAL.Repositories.Interfaces;
@@ -36,12 +37,14 @@ namespace GymManagement.BLL.Services.Classes
         #endregion
 
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IMapper _mapper;
 
         // we will use unit of work pattern to save changes in one place and not in every repository****************
         //---------UnitOfwork
-        public MemberService(IUnitOfWork unitOfWork)
+        public MemberService(IUnitOfWork unitOfWork , IMapper mapper) // mapper to auto map
         {
             _unitOfWork = unitOfWork; // do not forget to register it in program.cs
+            _mapper = mapper; // do not forget to register it in program.cs [about each method need from to so make profile and register profile in program.cs] => Folder Profiels =>MappingProfile
         }
 
         public async Task<bool> CreateMemberAsync(CreateMemberViewModel model
@@ -54,30 +57,10 @@ namespace GymManagement.BLL.Services.Classes
             var PhoneExist = await _unitOfWork.GetRepository<Member>().AnyAsync(X => X.Phone == model.Phone);
             if (EmailExist || PhoneExist) return false;
             //Add member 
-            // take the member from form {member view model} and add it in real mmeber entity of data base
-            var member = new Member() { 
-                Name = model.Name,  
-                Email = model.Email,
-                Phone = model.Phone,
-                DareOfBirth = model.DateOfBirth,
-                Gender = model.Gender,
-                Address = new Address()
-                {
-                    BuildingNumber = model.BuildingNumber,
-                    City = model.City,
-                    Street = model.Street
-                },
-                HealthRecord = new HealthRecord()
-                {
-                    BloodType = model.HealthRecordViewModel.BloodType,
-                    Height = model.HealthRecordViewModel.Height,
-                    Weight = model.HealthRecordViewModel.Weight,
-                    Note = model.HealthRecordViewModel.Note
-                }
-                
-            
-            
-            };
+            // take the member from form { create member view model} and add it in real mmeber entity of data base
+            var member = _mapper.Map<CreateMemberViewModel, Member>(model);
+
+           
             //var result = await _MemberRepo.AddAsync(member);
             //return result > 0; [old]
 
@@ -146,20 +129,27 @@ namespace GymManagement.BLL.Services.Classes
             var member = await _unitOfWork.GetRepository<Member>().GetByIdAsync(memberid, ct);
             if (member == null) return null;
             // pass the data from member to view model
-            var model = new MemberViewModel()
-            {
 
-                Name = member.Name,
-                Phone = member.Phone,
-                Email = member.Email,
-                Photo = member.Photo,
-                Gender = member.Gender.ToString(),
-                DateOfBirth = member.DareOfBirth.ToShortDateString(),
-                Address = $"{member.Address.BuildingNumber} _ {member.Address.Street} _ {member.Address.City}",
-                // plan name ?????????
-                // membership start & end date  ?????????
-  
-            };
+
+            //var model = new MemberViewModel()
+            //{
+
+            //    Name = member.Name,
+            //    Phone = member.Phone,
+            //    Email = member.Email,
+            //    Photo = member.Photo,
+            //    Gender = member.Gender.ToString(),
+            //    DateOfBirth = member.DareOfBirth.ToShortDateString(),
+            //    Address = $"{member.Address.BuildingNumber} _ {member.Address.Street} _ {member.Address.City}",
+            //    // plan name ?????????
+            //    // membership start & end date  ?????????
+
+            //};[old]
+
+            //[new]
+            //var model = _mapper.Map<Member, MemberViewModel>(member); or
+            var model = _mapper.Map<MemberViewModel>(member);
+
             // check if user has Active MemberShip?? =>  plan or not 
             // will need membership table so will register it above  in IGeneric 
             var ActiveMemberShip = await _unitOfWork.GetRepository<Membership>().FirstOrDefaultAsync(X => X.MemberId == memberid && X.EndDate > DateTime.Now);
@@ -182,15 +172,9 @@ namespace GymManagement.BLL.Services.Classes
             var record = await _unitOfWork.GetRepository<HealthRecord>().FirstOrDefaultAsync(X => X.MemberId == memberid, ct: ct);
             if (record is null) return null;
             else
-                return new HealthRecordViewModel()
-                {
-                    Weight = record.Weight,
-                    Height = record.Height,
-                    BloodType = record.BloodType,
-                    Note = record.Note
-
-                };   
-            
+                // health record to healthrecordviewmodel
+                return _mapper.Map<HealthRecord,HealthRecordViewModel>(record);// do u have profile for this ? no => go first mark in profile
+                
         }
 
         public async Task<MemberToUpdateViewModel> GetMemberToUpdateAsync(int memberid, CancellationToken ct = default)
@@ -198,16 +182,8 @@ namespace GymManagement.BLL.Services.Classes
             var member = await _unitOfWork.GetRepository<Member>().GetByIdAsync(memberid, ct);
             if (member is null) return null;
             else
-                return new MemberToUpdateViewModel()
-                {
-                    Name = member.Name,
-                    Phone = member.Phone,
-                    Email = member.Email,
-                    City = member.Address.City,
-                    BuildingNumber = member.Address.BuildingNumber,
-                    Street = member.Address.Street,
-                    Photo = member.Photo
-                 };            
+                // from member to membertoupdateviewmodel 
+                return _mapper.Map<MemberToUpdateViewModel>(member);           
                 
             
 
@@ -222,12 +198,9 @@ namespace GymManagement.BLL.Services.Classes
             var emailexist = await _unitOfWork.GetRepository<Member>().AnyAsync(X => X.Email == model.Email && X.Id != id); //not the current member cause may the same one save the same email while editing
             var phoneexist = await _unitOfWork.GetRepository<Member>().AnyAsync(X => X.Phone == model.Phone && X.Id != id);
             if (emailexist || phoneexist) return false;
-
-            member.Phone = model.Phone;
-            member.Email = model.Email;
-            member.Address.City = model.City;
-            member.Address.Street = model.Street;
-            member.Address.BuildingNumber = model.BuildingNumber;
+            //membertoupdateviewmodel to member
+            //  _mapper.Map<Member>(member); wrong => create new object the address is null here
+            _mapper.Map<MemberToUpdateViewModel,Member>(model,member);
             member.UpdatedAt = DateTime.Now;
             _unitOfWork.GetRepository<Member>().UpdateAsync(member);
             var result = await _unitOfWork.SaveChangesAsync(ct);
@@ -237,5 +210,18 @@ namespace GymManagement.BLL.Services.Classes
             
 
         }
+
+
+
+        #region From Manual Map to Auto Mapper
+        //Download Auto Mapper In BLL 
+        //inject it in ctor above
+        //[about each method need {from} {to} so make profile and use it's implementaion in progrm.cs {.AddAutoMapper(X=>X.AddProfile(new mappingprofile))}] => Folder Prfiels in BLL => MappingProfile inherited {Profile}=> belongs to AutoMapper 
+        // after it add each mapp in profile
+        // the flow is => mapper in ctor above => So will go to program.cs Any Resgisterd map Auto ? yes Addprofile use mapping profile
+        // which mapping profile contains every map i put in it and need!
+        // map by confnuition   
+        // set in every method/service =>   var model = _mapper.Map<MemberViewModel>(member) ; etc
+        #endregion
     }
 }

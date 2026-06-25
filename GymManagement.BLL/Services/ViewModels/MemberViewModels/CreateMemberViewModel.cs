@@ -30,7 +30,7 @@ namespace GymManagement.BLL.Services.ViewModels.MemberViewModels
 
         [Required(ErrorMessage = "Date of Birth is required")]
         [DataType(DataType.Date)]
-        public DateOnly DateOfBirth { get; set; }
+        public DateOnly DareOfBirth { get; set; }
 
         [Required(ErrorMessage = "Gender is required")]
         public Gender Gender { get; set; }

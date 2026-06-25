@@ -15,11 +15,13 @@ namespace GymManagement.DAL.Repositories.Classes
         private readonly Dictionary<string, object> _repositories = [];
 
         //================DATABASE CONNECTION================
-        public UnitOfWork(GymDbContext dbContext)
+        public UnitOfWork(GymDbContext dbContext ,ISessionRepository sessionrepo)//
         {
             _dbContext = dbContext;
+            SessionRepository = sessionrepo;// then register in program.cs <ISessionRepo ,SessionRepo> 
         }
 
+        public ISessionRepository SessionRepository { get; }// get only
 
         public IGenericRepository<TEntity> GetRepository<TEntity>() where TEntity : BaseEntity, new()
         {
@@ -44,7 +46,10 @@ namespace GymManagement.DAL.Repositories.Classes
 
         public async Task<int> SaveChangesAsync(CancellationToken ct = default) => await _dbContext.SaveChangesAsync(ct);
 
-
+        //خلص كل العمليه واعمل سيف اتشينج ف الاخر تحت ترانزاكشن واحده 
+        //تحفه يحافظ ع العلاقات  
+        // افتكر مشكله ميمبر احمد وان الاوتو مابر بتاع الهيلث ريكورد بتاعو كان بيرجع  نال
+        //بسبب متضاف مانول قبل حوار ترانزكشن  واحده وسيف اتشينج واحده ف دمرلي علاقه 1 1 ماست ماست
     }
 
 }

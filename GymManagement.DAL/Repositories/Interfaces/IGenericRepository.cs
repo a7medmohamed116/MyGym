@@ -16,6 +16,7 @@ namespace GymManagement.DAL.Repositories.Interfaces
         Task<TEntity?> GetByIdAsync(int id, CancellationToken ct = default);
         // add update delete will return int cause # of row effected
 
+        //
         void AddAsync(TEntity entity, CancellationToken ct = default);
         void UpdateAsync(TEntity entity, CancellationToken ct = default);
         void DeleteAsync(TEntity entity, CancellationToken ct = default);

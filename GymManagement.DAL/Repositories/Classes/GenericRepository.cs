@@ -26,7 +26,7 @@ namespace GymManagement.DAL.Repositories.Classes
         public async void AddAsync(TEntity entity, CancellationToken ct = default)
         {
             _dbContext.Set<TEntity>().Add(entity); // add local
-            //return await _dbContext.SaveChangesAsync(ct); // no need to save changes here because we will save changes in unit of work class
+            //return await _dbContext.SaveChangesAsync(ct); // no need to save changes here because we will save changes in unit of work class  im (add ,update,delete)
         }
 
         public async Task<bool> AnyAsync(Expression<Func<TEntity, bool>> expression, CancellationToken ct = default)
