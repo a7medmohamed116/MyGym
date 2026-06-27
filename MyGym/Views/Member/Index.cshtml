@@ -61,8 +61,17 @@
                             <tr>
                             <td>
                                 <span class="avatar">
-                                    <img src="~/images/User.jpg" alt="Default Avatar" class="rounded-circle"
-                                        style="width: 40px; height: 40px;" />
+                                    @*if no photo represent default*@
+                                            @if (string.IsNullOrWhiteSpace(member.Photo))
+                                            {
+                                                <img src="~/images/User.png.jpg" alt="Default Avatar" class="rounded-circle"
+                                                     style="width: 40px; height: 40px;" />
+                                            }else @*else represent the members photos call the endpoint u created in the member controller that getfile by @url.action(nameofaction,controller ,parameters) *@
+                                            {
+                                                <img src="@Url.Action("Picture","Member",new {id = member.Id})" alt="Default Avatar" class="rounded-circle"
+                                                     style="width: 40px; height: 40px;" />
+                                            }
+
                                 </span>
                             </td>
                             <td><span>@member.Name</span></td>

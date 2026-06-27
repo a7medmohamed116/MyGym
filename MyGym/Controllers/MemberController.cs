@@ -10,9 +10,12 @@ namespace MyGym.PL.Controllers
 
         //MemberService
         private readonly IMemberService _memberService;
-        public MemberController(IMemberService memberService)
+        private readonly IAttachmentService _attachmentService;
+
+        public MemberController(IMemberService memberService , IAttachmentService attachmentService)
         {
             _memberService = memberService;
+            _attachmentService = attachmentService;
         }
 
 
@@ -47,10 +50,10 @@ namespace MyGym.PL.Controllers
         // get :: baseurl/member/HealthsRecordDetalis/{id} => member healthrecord 
 
 
-        public async Task<IActionResult> HealthRecordDetails(int id , CancellationToken ct = default)
+        public async Task<IActionResult> HealthRecordDetails(int id )
         {
 
-            var record = await _memberService.GetMemberHealthRecordByIdAsync(id, ct);
+            var record = await _memberService.GetMemberHealthRecordByIdAsync(id);
             if (record is null)
             {
                 TempData["ErrorMessage"] = "No Health Record Found !";
@@ -59,6 +62,19 @@ namespace MyGym.PL.Controllers
             }
             return View(record);
         }
+
+
+        // get memberphoto 
+        [HttpGet]
+        public async Task<IActionResult>Picture(int id, CancellationToken ct = default)
+        {
+            var member = await _memberService.GetMemberDetailsByIdAsync(id, ct);
+            if (member is null || string.IsNullOrWhiteSpace(member.Photo)) return NotFound();
+            var result =  _attachmentService.GetFile(member.Photo, "MembersPhoto");
+            if (result is null) return NotFound();
+            return File(result.Value.stream, result.Value.ContantType);
+        }
+
 
 
 

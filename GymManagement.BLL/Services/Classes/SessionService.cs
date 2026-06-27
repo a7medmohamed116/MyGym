@@ -186,11 +186,6 @@ namespace GymManagement.BLL.Services.Classes
             _unitOfWork.SessionRepository.UpdateAsync(session);
             var result =  await _unitOfWork.SaveChangesAsync(ct);
             return result > 0 ? Result.OK() : Result.Fail("Failed To Update Session");             
-               
-            
-
-
-
 
         }
     }

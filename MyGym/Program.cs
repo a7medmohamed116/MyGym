@@ -6,12 +6,14 @@ using GymManagement.BLL.Services.Interfaces;
 using GymManagement.BLL.Services.Classes;
 using AutoMapper;
 using GymManagement.BLL.Profiels;
+using GymManagement.DAL.Context;
+using MyGym.PL;
 
 namespace MyGym
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
             //Register DbContext
@@ -28,10 +30,14 @@ namespace MyGym
             builder.Services.AddScoped<ISessionRepository,SessionRepository>();
             builder.Services.AddScoped<ISessionService,SessionService>();
             builder.Services.AddScoped<IPlanService, PlanService>();
+            builder.Services.AddScoped<IAttachmentService,AttachmentService>();
             // Add auto mapper
             builder.Services.AddAutoMapper(X=>X.AddProfile(new MappingProfile()));
 
             var app = builder.Build();
+            //add seeding 
+            await app.MigrateAndSeedDataAsync();
+
 
             // Configure the HTTP request pipeline.
             if (!app.Environment.IsDevelopment())

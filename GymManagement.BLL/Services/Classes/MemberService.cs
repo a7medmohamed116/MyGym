@@ -38,13 +38,15 @@ namespace GymManagement.BLL.Services.Classes
 
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
+        private readonly IAttachmentService _attachmentService;
 
         // we will use unit of work pattern to save changes in one place and not in every repository****************
         //---------UnitOfwork
-        public MemberService(IUnitOfWork unitOfWork , IMapper mapper) // mapper to auto map
+        public MemberService(IUnitOfWork unitOfWork , IMapper mapper ,IAttachmentService attachmentService) // mapper to auto map
         {
             _unitOfWork = unitOfWork; // do not forget to register it in program.cs
             _mapper = mapper; // do not forget to register it in program.cs [about each method need from to so make profile and register profile in program.cs] => Folder Profiels =>MappingProfile
+            _attachmentService = attachmentService; // di don't forget to register it in program.cs  
         }
 
         public async Task<bool> CreateMemberAsync(CreateMemberViewModel model
@@ -56,10 +58,18 @@ namespace GymManagement.BLL.Services.Classes
             var EmailExist = await _unitOfWork.GetRepository<Member>().AnyAsync(X => X.Email == model.Email);
             var PhoneExist = await _unitOfWork.GetRepository<Member>().AnyAsync(X => X.Phone == model.Phone);
             if (EmailExist || PhoneExist) return false;
+
+            // Upload Photo
+            // first inject iattachmentservice above
+            // photo file this is creatememberviewmodel which user will upload it  
+            var StoredPhotoName = await _attachmentService.UploadAsync(model.PhotoFile.OpenReadStream(), model.PhotoFile.FileName, "MembersPhoto");
+            if (string.IsNullOrWhiteSpace(StoredPhotoName)) return false;
+
             //Add member 
             // take the member from form { create member view model} and add it in real mmeber entity of data base
             var member = _mapper.Map<CreateMemberViewModel, Member>(model);
-
+            // map the photo manualy
+            member.Photo = StoredPhotoName;
            
             //var result = await _MemberRepo.AddAsync(member);
             //return result > 0; [old]
@@ -67,8 +77,16 @@ namespace GymManagement.BLL.Services.Classes
             //[new]
             _unitOfWork.GetRepository<Member>().AddAsync(member);
             var result = await _unitOfWork.SaveChangesAsync(ct);
-            return result > 0;
-
+            if (result >0)
+            {
+                return true;
+            }// if did not make the else , ohterwise member added or not the photo will be uploaded so delete it
+            else
+            {
+                // delete photo if failed
+                _attachmentService.Delete(StoredPhotoName, "MembersPhoto");
+                return false;
+            }
         }
 
         public async Task<bool> DeleteMemberAsync(int memberid, CancellationToken ct = default)
