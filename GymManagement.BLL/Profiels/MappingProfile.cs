@@ -3,6 +3,7 @@
 using GymManagement.BLL.Services.ViewModels.MemberViewModels;
 using GymManagement.BLL.Services.ViewModels.PlanViewModels;
 using GymManagement.BLL.Services.ViewModels.SessionViewModels;
+using GymManagement.BLL.Services.ViewModels.TrainerViewModels;
 using GymManagement.DAL.Models;
 using MyGym.Models;
 using System;
@@ -20,6 +21,7 @@ namespace GymManagement.BLL.Profiels
             SessionProfiels();
             MemberProfiels();
             PlanProfiels();
+            TrainerProfiels();
 
         }
 
@@ -91,6 +93,37 @@ namespace GymManagement.BLL.Profiels
         private void PlanProfiels()
         {
             CreateMap<Plan, PlanViewModel>();
+            CreateMap<Plan, UpdatePlanViewModel>().ReverseMap();
+        }
+        private void TrainerProfiels()
+        {
+            CreateMap<Trainer, TrainerViewModel>()
+                                                .ForMember(dest => dest.Gender, opt => opt.MapFrom(src => src.Gender.ToString()))
+                                                .ForMember(dest => dest.Specialties, opt => opt.MapFrom(src => src.Specialty.ToString()))
+                                                // for details
+                                                .ForMember(dest => dest.DateOfBirth, opt => opt.MapFrom(src => src.DareOfBirth))
+                                                .ForMember(dest => dest.Address, opt => opt.MapFrom(src => $"{src.Address.BuildingNumber} _ {src.Address.Street} _ {src.Address.City}"));
+
+            CreateMap<CreateTrianerViewModel, Trainer>()
+                                                .ForMember(dest => dest.Specialty, opt => opt.MapFrom(src => src.Specialties))
+                                                .ForMember(dest => dest.DareOfBirth , opt=>opt.MapFrom(src=>src.DateOfBirth))
+                                                .ForPath(dest => dest.Address.City, opt => opt.MapFrom(src => src.City))
+                                                .ForPath(dest => dest.Address.BuildingNumber, opt => opt.MapFrom(src => src.BuildingNumber))
+                                                .ForPath(dest => dest.Address.Street, opt => opt.MapFrom(src => src.Street));
+
+
+            CreateMap<Trainer, UpdateTrainerViewModel>()
+                                                    .ForMember(dest => dest.Specialty, opt => opt.MapFrom(src => src.Specialty.ToString()))
+                                                    .ForMember(dest => dest.BuildingNumber, opt => opt.MapFrom(src => src.Address.BuildingNumber))
+                                                    .ForMember(dest => dest.Street, opt => opt.MapFrom(src => src.Address.Street))
+                                                    .ForMember(dest => dest.City, opt => opt.MapFrom(src => src.Address.City));
+
+
+
+            CreateMap<UpdateTrainerViewModel, Trainer>().ForPath(dest => dest.Address.City, opt => opt.MapFrom(src => src.City))
+                                                .ForPath(dest => dest.Address.BuildingNumber, opt => opt.MapFrom(src => src.BuildingNumber))
+                                                .ForPath(dest => dest.Address.Street, opt => opt.MapFrom(src => src.Street)); ;
+
         }
     }
-} 
+} //dont forget (model,entity) on reverse mapp

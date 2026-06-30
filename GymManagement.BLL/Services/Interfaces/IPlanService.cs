@@ -13,5 +13,8 @@ namespace GymManagement.BLL.Services.Interfaces
         Task<IEnumerable<PlanViewModel>>GetAllPlansAsync(CancellationToken ct =default);
         Task<Result<PlanViewModel>> GetPlanDetailsByIdAsync(int planid, CancellationToken ct = default);
         Task<Result> ActivateButtom(int planid ,CancellationToken ct =default);
+        Task<Result<UpdatePlanViewModel>>GetPlanToUpdate(int planid, CancellationToken ct =default);
+        Task<Result>UpdatePlanAsync(int planid,UpdatePlanViewModel model, CancellationToken ct =default);
+
     }
 }

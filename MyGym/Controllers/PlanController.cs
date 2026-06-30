@@ -1,4 +1,5 @@
 ﻿using GymManagement.BLL.Services.Interfaces;
+using GymManagement.BLL.Services.ViewModels.PlanViewModels;
 using GymManagement.DAL.Repositories.Classes;
 using GymManagement.DAL.Repositories.Interfaces;
 using Microsoft.AspNetCore.Mvc;
@@ -72,5 +73,35 @@ namespace MyGym.Controllers
 
         }
 
-    }
+        //Get :: baseurl/plan/update/{id}
+        [HttpGet]
+        public async Task<IActionResult>Edit(int id, CancellationToken ct) 
+        {
+            var result = await _planService.GetPlanToUpdate(id, ct);
+            if (result.success)
+            {
+                return View(result.Value);
+            }
+            TempData["ErrorMessage"] = result.error;
+            return RedirectToAction(nameof(Index));
+
+        }
+
+        [HttpPost]
+        public async Task<IActionResult>Edit([FromRoute]int id ,UpdatePlanViewModel model ,CancellationToken ct = default)
+        {
+            if (!ModelState.IsValid) return View(model);
+            var result = await _planService.UpdatePlanAsync(id, model, ct);
+            if (result.success)
+            {
+                TempData["SuccessMessage"] = "Plan Updated Successfully";
+                return RedirectToAction(nameof(Index));
+
+            }
+            TempData["ErrorMessage"] = result.error;
+            return View(model);
+
+        }
+
+    } // dont forget statemodel on edit post
 }

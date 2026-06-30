@@ -17,7 +17,7 @@ namespace GymManagement.DAL.Repositories.Interfaces
         // Session with load trainer and category for sessiondetails
         Task<Session?>GetSessionWithTrainerAndCategory(int sessionid , CancellationToken ct =default);
        
-
+       
 
 
 
