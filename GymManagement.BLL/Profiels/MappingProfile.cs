@@ -1,4 +1,7 @@
 ﻿using AutoMapper;
+using GymManagement.BLL.Services.ViewModels.BookingViewModels;
+using GymManagement.BLL.Services.ViewModels.MemberShipViewModels;
+
 //using AutoMapper.Execution;
 using GymManagement.BLL.Services.ViewModels.MemberViewModels;
 using GymManagement.BLL.Services.ViewModels.PlanViewModels;
@@ -22,6 +25,8 @@ namespace GymManagement.BLL.Profiels
             MemberProfiels();
             PlanProfiels();
             TrainerProfiels();
+            MemberShipProfiels();
+            BookingProfiels();
 
         }
 
@@ -124,6 +129,29 @@ namespace GymManagement.BLL.Profiels
                                                 .ForPath(dest => dest.Address.BuildingNumber, opt => opt.MapFrom(src => src.BuildingNumber))
                                                 .ForPath(dest => dest.Address.Street, opt => opt.MapFrom(src => src.Street)); ;
 
+        }
+
+
+        private void MemberShipProfiels()
+        {
+            CreateMap<Membership, MemberShipViewModel>()
+                                                        .ForMember(dest=>dest.MemberName , opt=>opt.MapFrom(src=>src.Member.Name))
+                                                        .ForMember(dest=>dest.PlanName , opt=>opt.MapFrom(src=>src.Plan.Name))
+                                                        .ForMember(dest=>dest.StartDate , opt=>opt.MapFrom(src=>src.CreatedAt));
+
+            CreateMap<CreateMembnerShipViewModel, Membership>();
+            CreateMap<Plan, PlanSelectListViewModel>();
+            CreateMap<Member, MemberSelectListViewModel>();
+                                                            ;
+            
+        }
+        private void BookingProfiels()
+        {
+            CreateMap<Booking, MemberForSessionViewModel>()
+                                                        .ForMember(dest => dest.MemberName, opt => opt.MapFrom(src => src.Member.Name))
+                                                        .ForMember(dest => dest.IsAttened, opt => opt.MapFrom(src => src.IsAttened))
+                                                        .ForMember(dest => dest.BookingDate, opt => opt.MapFrom(src => src.CreatedAt));
+            CreateMap<CreateBookingViewModel, Booking>();
         }
     }
 } //dont forget (model,entity) on reverse mapp

@@ -32,6 +32,10 @@ namespace MyGym
             builder.Services.AddScoped<IPlanService, PlanService>();
             builder.Services.AddScoped<IAttachmentService,AttachmentService>();
             builder.Services.AddScoped<ITrainerService,TrainerService>();
+            builder.Services.AddScoped<IMemberShipRepository, MemberSihipRepository>();
+            builder.Services.AddScoped<IMemberShipService, MemberShipService>();
+            builder.Services.AddScoped<IBookingRepository,BookingRepository>();
+            builder.Services.AddScoped<IBookingService, BookingService>();
             // Add auto mapper
             builder.Services.AddAutoMapper(X=>X.AddProfile(new MappingProfile()));
 

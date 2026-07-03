@@ -83,7 +83,7 @@ namespace GymManagement.BLL.Services.Classes
             //ليه روحت لفيت وعملتهمم ميثودس في السيشن ريبو عشاتن لو جربت اعمل كدا هفشل لان يونت اوف ورك انا  اللي عاملوا
             // ف طبيعي محدود ب ميثودش معينه مش هلاقي فيه ال انكلود او ال كاونت
             // ف السيشن ريبو بكلم ديبي كونتيكست ف معايا اكسيس للحاجات الجميله دي 
-            var sessions = await _unitOfWork.SessionRepository.GetSessionsWithTrainerAndCategory(ct);//.sessionrepo => properity
+            var sessions = await _unitOfWork.SessionRepository.GetSessionsWithTrainerAndCategory(ct:ct);//.sessionrepo => properity
             if (sessions is null || !sessions.Any()) return null;
             // map sessions to session view model
 

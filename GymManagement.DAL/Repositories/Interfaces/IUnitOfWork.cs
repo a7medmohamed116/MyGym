@@ -16,6 +16,8 @@ namespace GymManagement.DAL.Repositories.Interfaces
 
         //SessionRepo
         public ISessionRepository SessionRepository { get; } // add prop and implement it in unitofwork and give the value from injected value in ctor
+        public IMemberShipRepository memberShipRepository { get; }
+        public IBookingRepository bookingRepository { get; }
 
 
     }

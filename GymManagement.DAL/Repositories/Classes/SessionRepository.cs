@@ -5,6 +5,7 @@ using MyGym.Context;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -25,7 +26,7 @@ namespace GymManagement.DAL.Repositories.Classes
             return await _dbContext.Bookings.AsNoTracking().CountAsync(X => X.SessionId == sessionid);
         }
 
-        public async Task<IEnumerable<Session>> GetSessionsWithTrainerAndCategory(CancellationToken ct = default)
+        public async Task<IEnumerable<Session>> GetSessionsWithTrainerAndCategory(Expression<Func<Session,bool>>? expression = null ,CancellationToken ct = default)
         {
             //sessions.include trainer , category 
             var query =  _dbContext.Sessions.AsNoTracking().Include(X => X.Trainer).Include(X => X.Category);
