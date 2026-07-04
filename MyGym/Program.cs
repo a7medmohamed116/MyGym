@@ -39,6 +39,7 @@ namespace MyGym
             builder.Services.AddScoped<IMemberShipService, MemberShipService>();
             builder.Services.AddScoped<IBookingRepository,BookingRepository>();
             builder.Services.AddScoped<IBookingService, BookingService>();
+            builder.Services.AddScoped<IAnalyticsService, AnalyticsService>();
             // Add Identity
             builder.Services.AddIdentity<ApplicationUser, IdentityRole>(config =>
             {

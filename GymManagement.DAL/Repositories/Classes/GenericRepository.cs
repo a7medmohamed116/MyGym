@@ -1,6 +1,7 @@
 ﻿using GymManagement.DAL.Models;
 using GymManagement.DAL.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.SqlServer.Query.Internal;
 using MyGym.Context;
 using System;
 using System.Collections.Generic;
@@ -32,6 +33,15 @@ namespace GymManagement.DAL.Repositories.Classes
         public async Task<bool> AnyAsync(Expression<Func<TEntity, bool>> expression, CancellationToken ct = default)
         {
              return await _dbContext.Set<TEntity>().AnyAsync(expression, ct); // go mathch if anything match this expression in the database or not
+        }
+
+        public async Task<int> CountAsync(Expression<Func<TEntity, bool>>? expression = null, CancellationToken ct = default)
+        {
+            if (expression is null)
+            {
+                return await _dbContext.Set<TEntity>().AsNoTracking().CountAsync(ct);
+            }
+            return await _dbContext.Set<TEntity>().AsNoTracking().CountAsync(expression, ct);
         }
 
         public async void DeleteAsync(TEntity entity, CancellationToken ct = default)

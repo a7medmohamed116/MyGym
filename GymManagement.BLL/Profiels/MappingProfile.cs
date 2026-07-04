@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using GymManagement.BLL.Services.ViewModels.AnalyticsViewModels;
 using GymManagement.BLL.Services.ViewModels.BookingViewModels;
 using GymManagement.BLL.Services.ViewModels.MemberShipViewModels;
 
@@ -153,5 +154,8 @@ namespace GymManagement.BLL.Profiels
                                                         .ForMember(dest => dest.BookingDate, opt => opt.MapFrom(src => src.CreatedAt));
             CreateMap<CreateBookingViewModel, Booking>();
         }
+
+      
+
     }
 } //dont forget (model,entity) on reverse mapp
