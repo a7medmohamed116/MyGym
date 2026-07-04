@@ -68,6 +68,20 @@ namespace GymManagement.BLL.Services.Classes
 
         }
 
+        public async Task<Result> DeleteSession(int sessionid, CancellationToken ct = default)
+        {
+            var session = await _unitOfWork.SessionRepository.GetByIdAsync(sessionid, ct);
+            if (session is null) return Result.NotFound("Session Not Found");
+            var sessionstatus = session.StartDate < DateTime.UtcNow && session.EndDate > DateTime.UtcNow;
+            if (sessionstatus) return Result.Fail("Can't Delete OnGoing Session");
+            //by deafult cascade the delete session will make all booking delete
+            _unitOfWork.SessionRepository.DeleteAsync(session);
+            var result = await _unitOfWork.SaveChangesAsync(ct);
+            return result > 0 ? Result.OK() : Result.Fail("Failed To Delete Session");
+       
+            
+        }
+
         public async Task<IEnumerable<SessionViewModel>> GetAllSessionsAsync(CancellationToken ct = default)
         {
             //**Trainer , Category // new method represent session with trainer and category

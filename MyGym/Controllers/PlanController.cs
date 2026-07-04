@@ -2,6 +2,7 @@
 using GymManagement.BLL.Services.ViewModels.PlanViewModels;
 using GymManagement.DAL.Repositories.Classes;
 using GymManagement.DAL.Repositories.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MyGym.Context;
@@ -10,6 +11,7 @@ using System.Numerics;
 
 namespace MyGym.Controllers
 {
+    [Authorize(Roles = "SuperAdmin")]
     public class PlanController : Controller
     {
 

@@ -52,9 +52,13 @@
                             <li class="nav-item">
                                 <a class="nav-link  px-3 py-2 mx-2 fw-bolder fs-5" aria-current="page"asp-controller="Session" asp-action="Index">Sessions</a>
                             </li>
-                            <li class="nav-item">
-                                <a class="nav-link px-3 py-2 mx-2 fw-bolder fs-5" aria-current="page" asp-action="Index"asp-controller="PLan">Plans</a>
-                            </li>
+                            @if (User.IsInRole("SuperAdmin"))
+                                {
+                                    <li class="nav-item">
+                                        <a class="nav-link px-3 py-2 mx-2 fw-bolder fs-5" aria-current="page" asp-action="Index" asp-controller="PLan">Plans</a>
+                                    </li>
+                                }
+
                             <li class="nav-item">
                                 <a class="nav-link px-3 py-2 mx-2 fw-bolder fs-5" aria-current="page"
                                   asp-controller="MemberShip" asp-action="Index">Memberships</a>
@@ -66,7 +70,7 @@
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <form href="\Account\Logout" method="post" class="d-inline">
+                                <form asp-action="Logout" asp-controller="Account" method="post" class="d-inline">
                                     <button type="submit"
                                             class="btn btn-link nav-link px-3 py-2 mx-2 fw-bolder fs-5 text-black-alternative">
                                         Logout

@@ -20,6 +20,7 @@ namespace GymManagement.BLL.Services.Interfaces
         Task<Result<SessionViewModel>> GetSessionDetailsByIdAsync(int sessionid, CancellationToken ct = default);
 
         Task<Result<UpdateSessionViewModel>> GetSessionToUpdateAsync(int sessionid, CancellationToken ct = default);
-        Task<Result> UpdateSessionAsync(int sessionid, UpdateSessionViewModel model, CancellationToken ct = default); 
+        Task<Result> UpdateSessionAsync(int sessionid, UpdateSessionViewModel model, CancellationToken ct = default);
+        Task<Result> DeleteSession(int sessionid, CancellationToken ct = default);
     } 
 }

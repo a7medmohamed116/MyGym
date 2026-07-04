@@ -1,12 +1,15 @@
-using GymManagement.DAL.Repositories.Classes;
-using GymManagement.DAL.Repositories.Interfaces;
-using MyGym.Context;
-using Microsoft.EntityFrameworkCore;
-using GymManagement.BLL.Services.Interfaces;
-using GymManagement.BLL.Services.Classes;
 using AutoMapper;
 using GymManagement.BLL.Profiels;
+using GymManagement.BLL.Services.Classes;
+using GymManagement.BLL.Services.Interfaces;
 using GymManagement.DAL.Context;
+using GymManagement.DAL.Models;
+using GymManagement.DAL.Repositories.Classes;
+using GymManagement.DAL.Repositories.Interfaces;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
+using MyGym.Context;
 using MyGym.PL;
 
 namespace MyGym
@@ -36,6 +39,25 @@ namespace MyGym
             builder.Services.AddScoped<IMemberShipService, MemberShipService>();
             builder.Services.AddScoped<IBookingRepository,BookingRepository>();
             builder.Services.AddScoped<IBookingService, BookingService>();
+            // Add Identity
+            builder.Services.AddIdentity<ApplicationUser, IdentityRole>(config =>
+            {
+                config.Password.RequiredLength = 8;
+
+                config.Lockout.MaxFailedAccessAttempts = 5;
+                config.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(2);
+            }).AddEntityFrameworkStores<GymDbContext>();
+
+
+            builder.Services.ConfigureApplicationCookie(options =>
+            {
+                //Default Routes
+                //options.LoginPath = "/Account/Login";
+                //options.AccessDeniedPath = "/Account/AccessDenied";
+            });
+
+
+
             // Add auto mapper
             builder.Services.AddAutoMapper(X=>X.AddProfile(new MappingProfile()));
 
@@ -56,12 +78,12 @@ namespace MyGym
             app.UseStaticFiles();
 
             app.UseRouting();
-
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.MapControllerRoute(
                 name: "default",
-                pattern: "{controller=Home}/{action=Index}/{id?}");
+                pattern: "{controller=Account}/{action=Login}/{id?}");
 
             app.Run();
         }

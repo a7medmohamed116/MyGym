@@ -3,11 +3,13 @@ using GymManagement.BLL.Services.ViewModels.BookingViewModels;
 using GymManagement.BLL.Services.ViewModels.MemberShipViewModels;
 using GymManagement.BLL.Services.ViewModels.SessionViewModels;
 using GymManagement.DAL.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace MyGym.PL.Controllers
 {
+    [Authorize(Roles = "Admin,SuperAdmin")]
     public class BookingController : Controller
     {
         private readonly IBookingService _bookingService;

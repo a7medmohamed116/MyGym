@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 namespace MyGym.PL.Controllers
 {
     //[Authorize]
+    [Authorize(Roles = "Admin,SuperAdmin")]
     public class MemberShipController : Controller
     {
         private readonly IMemberShipService _memberShipService;

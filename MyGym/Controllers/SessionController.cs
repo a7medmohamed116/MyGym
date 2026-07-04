@@ -2,11 +2,13 @@
 using GymManagement.BLL.Commn;
 using GymManagement.BLL.Services.Interfaces;
 using GymManagement.BLL.Services.ViewModels.SessionViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace MyGym.PL.Controllers
 {
+    [Authorize(Roles = "Admin,SuperAdmin")]
     public class SessionController : Controller
     {
         private readonly ISessionService _sessionService;
@@ -123,6 +125,38 @@ namespace MyGym.PL.Controllers
             
 
 
-        
+        public async Task<IActionResult> Delete(int id , CancellationToken ct =default)
+        {
+            var session = await _sessionService.GetSessionDetailsByIdAsync(id, ct);
+            if (!session.success)
+            {
+                TempData["ErrorMessage"] = session.error;
+                return RedirectToAction(nameof(Index));
+            }
+            return View();
+        }
+
+
+        [HttpPost]
+
+        public async Task<IActionResult> DeleteConfirmed(int id , CancellationToken ct =default)
+        {
+
+            var result = await _sessionService.DeleteSession(id ,ct);
+            if (result.success)
+            {
+                TempData["SuccessMessage"] = "Session Deleted Successfully";
+                
+            }
+            else {
+                TempData["ErrorMessage"] = result.error;
+            }
+            return RedirectToAction(nameof(Index));
+
+        }
+
+
+
+
     }
 }
