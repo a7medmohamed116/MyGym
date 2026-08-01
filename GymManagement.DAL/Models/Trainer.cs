@@ -1,0 +1,17 @@
+﻿using GymManagement.DAL.Models.Enums;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace GymManagement.DAL.Models
+{
+    public class Trainer :GymUser
+    {
+        //hiredate == createdat of baseentity
+        public Specialty Specialty { get; set; }
+
+        public ICollection<Session> Sessions { get; set; } 
+    }
+}
